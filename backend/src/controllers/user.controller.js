@@ -4,7 +4,7 @@ import { ProfileModel } from "../models/Profile.js";
 
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await UserModel.find({isActive:GPUExternalTexture}).populate("roles").populate("favorites");//para que haga bien la referencia del otro documento se usa el nombre de la propiedad en donde esta la referencia
+    const users = await UserModel.find({isActive:true}).populate("roles").populate("favorites").populate("profile");//para que haga bien la referencia del otro documento se usa el nombre de la propiedad en donde esta la referencia
     return res.status(200).json({data: users});
   } catch (error) {
     return res.status(500).json({ msg: "lo sentimo osucrrio un error interno" });
@@ -14,7 +14,7 @@ export const getAllUsers = async (req, res) => {
 export const getUserById = async (req, res) => {
   try {
     const { id } = matchedData(req);
-    const userExist = await UserModel.findOne({_id:id, isActive:true}).populate("roles").populate("favorites");
+    const userExist = await UserModel.findOne({_id:id, isActive:true}).populate("roles").populate("favorites").populate("profile");
     return res.status(200).json({data: userExist});
   } catch (error) {
     return res.status(500).json({ msg: "lo sentimo osucrrio un error interno" });

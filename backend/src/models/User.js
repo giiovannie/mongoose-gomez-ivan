@@ -36,7 +36,17 @@ const userSchema = new Schema(
   },
   {
     versionKey: false,
+    // nota: permiten que los campos virtuales se incluyan cuando el documento se convierte a JSON o a un objeto normal.
+    toJSON:{virtuals: true},
+    toObject: {virtuals: true}
   },
 );
+
+userSchema.virtual("profile", {
+  ref: "Profile",
+  localField: "_id",
+  foreignField: "user",
+  justOne: true
+});
 
 export const UserModel = model("User", userSchema);
