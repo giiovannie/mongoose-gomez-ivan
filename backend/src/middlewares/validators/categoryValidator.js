@@ -7,7 +7,7 @@ export const createCategoryValidator = [
     .notEmpty().withMessage("El nombre es obligatorio")
     .isLength({ min: 3, max: 60 }).withMessage("El nombre debe tener entre 3 y 60 caracteres")
     .custom(async (value) => {
-      const category = await categoryModel.findOne({ name: value });
+      const category = await categoryModel.findOne({ name: value, isActive: true});
       if (category) throw new Error("La categoría ya existe")
       return true;
     }),
@@ -32,6 +32,7 @@ export const updateCategoryValidator = [
       const category = await categoryModel.findOne({
         name: value,
         _id: { $ne: req.params.id },
+        isActive:true
       });
       if (category) throw new Error("La categoría ya existe");
       return true;
@@ -51,7 +52,7 @@ export const validationCategoryById = [
     .isMongoId().withMessage("El ID de la categoría no es válido")
     .bail()
     .custom(async (id) => {
-      const categoryExist = await categoryModel.findById(id);
+      const categoryExist = await categoryModel.findOne({_id:id, isActive: true});
       if (!categoryExist) throw new Error("La categoría no existe");
       return true;
     }),

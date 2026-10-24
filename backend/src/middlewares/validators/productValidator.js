@@ -1,5 +1,5 @@
 import { body, param } from "express-validator";
-import { CategoryModel } from "../../models/Category.js";
+import { categoryModel } from "../../models/Category.js";
 import {productModel} from "../../models/Product.js"
  
 export const createProductValidator = [
@@ -19,7 +19,7 @@ export const createProductValidator = [
     .isMongoId().withMessage("El ID de la categoría no es válido")
     .bail()
     .custom(async (category_id) => {
-      const category = await CategoryModel.findById(category_id);
+      const category = await categoryModel.findOne({_id:category_id, isActive:true});
       if (!category) throw new Error("La categoría indicada no existe");
       return true;
     }),
@@ -55,7 +55,7 @@ export const updateProductValidator = [
     .withMessage("El ID de la categoría no es válido")
     .bail()
     .custom(async (category_id) => {
-      const category = await CategoryModel.findById(category_id);
+      const category = await categoryModel.findOne({_id:category_id, isActive:true});
       if (!category) throw new Error("La categoría indicada no existe");
       return true;
     }),
@@ -70,7 +70,7 @@ export const validationProductById = [
     .isMongoId().withMessage("El ID del producto no es válido")
     .bail()
     .custom(async (id) => {
-      const productExist = await productModel.findById(id);
+      const productExist = await productModel.findOne({_id:id, isActive:true});
       if (!productExist) throw new Error("El producto no existe");
       return true;
     }),

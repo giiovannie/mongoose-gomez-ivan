@@ -24,7 +24,7 @@ export const createProfileValidator = [
     .isMongoId().withMessage("El ID del usuario no es válido")
     .bail()
     .custom(async (userID) => {
-      const userExist = await UserModel.findById(userID);
+      const userExist = await UserModel.findOne({_id:userID,isActive:true});
       if (!userExist) throw new Error("El usuario indicado no existe");
       const profile = await ProfileModel.findOne({ user: userID });
       if (profile) throw new Error("El usuario ya tiene un perfil")
@@ -83,7 +83,7 @@ export const validationProfileById = [
     .isMongoId().withMessage("El ID del perfil no es válido")
     .bail()
     .custom(async (id) => {
-      const profileExist = await ProfileModel.findById(id);
+      const profileExist = await ProfileModel.findOne({_id:id, isActive:true});
       if (!profileExist) throw new Error("El perfil no existe");
       return true;
     }),

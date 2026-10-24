@@ -6,7 +6,7 @@ export const createRoleValidator = [
     .notEmpty().withMessage("El nombre del rol es obligatorio")
     .bail()
     .custom(async (name) => {
-      const role = await RoleModel.findOne({ rolename: name });
+      const role = await RoleModel.findOne({ rolename: name, isActive:true});
       if (role) throw new Error("El rol ya existe");
       return true;
     }),
@@ -23,6 +23,7 @@ export const updateRoleValidator = [
       const role = await RoleModel.findOne({
         rolename: name,
         _id: { $ne: req.params.id },
+        isActive:true
       });
       if (role) throw new Error("El rol ya existe");
       return true;
@@ -36,7 +37,7 @@ export const validationRoleById = [
     .isMongoId().withMessage("El ID del rol no es válido")
     .bail()
     .custom(async (id) => {
-      const roleExist = await RoleModel.findById(id);
+      const roleExist = await RoleModel.findOne({_id:id, isActive:true});
       if (!roleExist) throw new Error("El rol no existe");
       return true;
     }),

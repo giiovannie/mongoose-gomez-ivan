@@ -30,7 +30,7 @@ export const createUserValidation = [
     .isMongoId().withMessage("el rol debe ser del tipo string")
     .bail()
     .custom(async (rolID) => {
-      const roleExist = await RoleModel.findById(rolID);
+      const roleExist = await RoleModel.findOne({_id: rolID, isActive:true});
       if (!roleExist)
         throw new Error("el rol no que estas tratando de insertar no existe");
       return true;
@@ -43,7 +43,7 @@ export const createUserValidation = [
     .isMongoId().withMessage("El ID del producto favorito no es válido")
     .bail()
     .custom(async (idfavorite) => {
-      const product = await productModel.findById(idfavorite);
+      const product = await productModel.findOne({_id:idfavorite, isActive:true});
       if (!product) throw new Error("El producto favorito no existe");
       return true;
     }),
@@ -55,7 +55,7 @@ export const validationUserById = [
     .isMongoId().withMessage("El ID del usuario no es válido")
     .bail()
     .custom(async (id) => {
-      const userExist = await UserModel.findById(id);
+      const userExist = await UserModel.findOne({_id:id, isActive:true});
       if (!userExist) throw new Error("El usuario no existe");
       return true;
     })
