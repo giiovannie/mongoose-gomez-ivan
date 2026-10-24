@@ -50,6 +50,14 @@ export const createUserValidation = [
 ];
 
 export const updateUserValidator = [
+  param("id")
+    .isMongoId().withMessage("El ID del usuario no es válido")
+    .bail()
+    .custom(async (id) => {
+      const user = await UserModel.findOne({ _id: id, isActive: true });
+      if (!user) throw new Error("El usuario no existe o está inactivo");
+      return true;
+    }),
   body("username")
     .optional()
     .notEmpty().withMessage("El nombre de usuario no puede estar vacío")
