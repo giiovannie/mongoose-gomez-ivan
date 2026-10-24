@@ -4,7 +4,7 @@ import { UserModel } from "../models/User.js";
 
 export const getAllRoles = async (req, res) => {
   try {
-    const roles = await RoleModel.find();
+    const roles = await RoleModel.find({isActive:true});
     return res.status(200).json({ data: roles });
   } catch (error) {
     console.log(error);
@@ -15,7 +15,7 @@ export const getAllRoles = async (req, res) => {
 export const getRoleById = async (req, res) => {
   try {
     const { id } = matchedData(req);
-    const role = await RoleModel.findById(id);
+    const role = await RoleModel.findOne({_id:id, isActive:true});
     return res.status(200).json({ data: role });
   } catch (error) {
     console.log(error);
@@ -48,11 +48,17 @@ export const updateRole = async (req, res) => {
 export const deleteRole = async (req, res) => {
   try {
     const { id } = matchedData(req);
-    const roleDeleted = await RoleModel.findByIdAndUpdate(
+    const roleDisabled = await RoleModel.findByIdAndUpdate(
       id,
-      {}
+      {isActive:false},
+      {new: true}
     );
-    return res.status(200).json({msg: "el rol fue eliminado correctamente",data: roleDeleted});
+
+    await UserModel.updateMany(
+      {roles: id},
+      {$pull: {roles: id}}
+    )
+    return res.status(200).json({msg: "el rol fue desactivado correctamente",data: roleDisabled});
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "lo sentimos ocurrio un error interno" });
