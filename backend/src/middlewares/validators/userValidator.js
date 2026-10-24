@@ -49,6 +49,50 @@ export const createUserValidation = [
     }),
 ];
 
+export const updateUserValidator = [
+  body("username")
+    .optional()
+    .notEmpty().withMessage("El nombre de usuario no puede estar vacío")
+    .bail()
+    .custom(async (username) => {
+      const user = await UserModel.findOne({ username, isActive: true });
+      if (user) throw new Error("El nombre de usuario ya existe");
+      return true;
+    }),
+  body("email")
+    .optional()
+    .isEmail().withMessage("Debe ingresar un email válido")
+    .bail()
+    .custom(async (email) => {
+      const user = await UserModel.findOne({ email, isActive: true });
+      if (user) throw new Error("El email ya está registrado");
+      return true;
+    }),
+  body("password")
+    .optional()
+    .isLength({ min: 6 }).withMessage("La contraseña debe tener al menos 6 caracteres"),
+  body("roles")
+    .optional()
+    .isArray().withMessage("Los roles deben enviarse en un arreglo")
+    .custom(async (roles) => {
+      for (const rolID of roles) {
+        const rol = await RoleModel.findOne({ _id: rolID, isActive: true });
+        if (!rol) throw new Error("Uno de los roles no existe o está inactivo");
+      }
+    return true;
+    }),
+  body("favorites")
+    .optional()
+    .isArray().withMessage("Los favoritos deben enviarse en un arreglo")
+    .custom(async (favorites) => {
+      for (const idfavorite of favorites) {
+        const product = await productModel.findOne({ _id: idfavorite, isActive: true });
+        if (!product) throw new Error("Uno de los productos favoritos no existe o está inactivo");
+      }
+      return true;
+    })
+];
+
 export const validationUserById = [
   param("id")
     .notEmpty().withMessage("El ID es obligatorio")

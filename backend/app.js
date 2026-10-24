@@ -4,11 +4,11 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import { startDB } from './src/config/database.js'
 
-import { userRouter } from "./routes/userRoutes.js";
-import { productRouter } from "./routes/productRoutes.js";
-import { categoryRouter } from "./routes/categoryRoutes.js";
-import { profileRouter } from "./routes/profileRoutes.js";
-import { roleRouter } from "./routes/roleRoutes.js";
+import { userRouter } from "./src/routes/user.routes.js";
+import { productRouter } from "./src/routes/product.routes.js";
+import { categoryRouter } from "./src/routes/category.routes.js";
+import { profileRouter } from "./src/routes/profile.routes.js";
+import { roleRouter } from "./src/routes/role.routes.js";
 
 
 const PORT = process.env.PORT || 3005;

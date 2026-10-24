@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { getAllRoles, getRoleById, createRole, updateRole, deleteRole } from "../controllers/role.controller.js";
-import { createRoleValidator, updateRoleValidator, validationRoleById } from "./validators/roleValidator.js";
+import { createRoleValidator, updateRoleValidator, validationRoleById } from "../middlewares/validators/roleValidations.js";
 import { validate } from "../middlewares/validate.js";
 
 export const roleRouter = Router();

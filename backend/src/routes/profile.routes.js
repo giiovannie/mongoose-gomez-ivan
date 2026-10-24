@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { getAllProfiles, getProfilesbyId, createProfile, updateProfile, deleteProfile } from "../controllers/profile.controller.js";
-import { createProfileValidator, updateProfileValidator, validationProfileById } from "./validators/profileValidator.js";
+import { createProfileValidator, updateProfileValidator, validationProfileById } from "../middlewares/validators/profileValidator.js";
 import { validate } from "../middlewares/validate.js";
 
 export const profileRouter = Router();
