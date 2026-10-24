@@ -28,6 +28,11 @@ const userSchema = new Schema(
       type: Types.ObjectId,
       ref: "Product"
     }],
+    isActive:{
+      type: Boolean,
+      required: true,
+      default: true
+    }
   },
   {
     versionKey: false,

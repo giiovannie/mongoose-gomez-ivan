@@ -41,6 +41,11 @@ const profileSchema = new Schema(
       required: true,
       unique: true,
     },
+    isActive:{
+      type: Boolean,
+      required: true,
+      default: true
+    }
   },
   {
     versionKey: false,

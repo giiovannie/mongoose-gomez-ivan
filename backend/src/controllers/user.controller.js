@@ -1,9 +1,10 @@
 import { matchedData } from "express-validator";
 import { UserModel } from "../models/User.js";
+import { ProfileModel } from "../models/Profile.js";
 
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await UserModel.find().populate("roles").populate("favorites");//para que haga bien la referencia del otro documento se usa el nombre de la propiedad en donde esta la referencia
+    const users = await UserModel.find({isActive:GPUExternalTexture}).populate("roles").populate("favorites");//para que haga bien la referencia del otro documento se usa el nombre de la propiedad en donde esta la referencia
     return res.status(200).json({data: users});
   } catch (error) {
     return res.status(500).json({ msg: "lo sentimo osucrrio un error interno" });
@@ -13,7 +14,7 @@ export const getAllUsers = async (req, res) => {
 export const getUserById = async (req, res) => {
   try {
     const { id } = matchedData(req);
-    const userExist = await UserModel.findById(id).populate("roles").populate("favorites");
+    const userExist = await UserModel.findOne({_id:id, isActive:true}).populate("roles").populate("favorites");
     return res.status(200).json({data: userExist});
   } catch (error) {
     return res.status(500).json({ msg: "lo sentimo osucrrio un error interno" });
@@ -43,8 +44,18 @@ export const updateUsers = async (req, res) => {
 export const deleteUsers = async (req, res) => {
   try {
     const { id } = matchedData(req);
-    const userDeleted = await UserModel.findByIdAndDelete(id);
-    return res.status(200).json({data: userDeleted})
+    const userDeleted = await UserModel.findByIdAndUpdate(
+      id,
+      {isActive: false},
+      {new:true}
+    );
+
+    await ProfileModel.findOneAndUpdate(
+      { user: id, isActive: true },
+      { isActive: false },
+      { new: true }
+    );
+    return res.status(200).json({msg:"usuario desactivado correctamente",data: userDeleted})
   } catch (error) {
     return res.status(500).json({ msg: "lo sentimo osucrrio un error interno" });
   }
